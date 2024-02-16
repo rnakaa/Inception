@@ -1,0 +1,7 @@
+version: "3"
+services:
+  all-in-one:
+    build: ./nginx
+    ports:
+     - "8080:80"
+    tty: true
