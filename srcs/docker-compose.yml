@@ -1,0 +1,25 @@
+version: "3"
+services:
+  nginx:
+    build: ./requirements/nginx
+    ports:
+     - "8080:80"
+    tty: true
+    networks:
+     - incep
+    volumes:
+     - data:/var/www/html
+
+  wordpress:
+    build: ./requirements/wordpress/
+    tty: true
+    networks:
+     - incep
+    volumes:
+    - data:/var/www/html
+
+volumes:
+    data:
+
+networks:
+   incep:
