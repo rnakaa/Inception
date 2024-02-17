@@ -9,6 +9,7 @@ services:
      - incep
     volumes:
      - data:/var/www/html
+     - ./requirements/nginx/default:/etc/nginx/sites-available/default
 
   wordpress:
     build: ./requirements/wordpress/
@@ -17,7 +18,7 @@ services:
      - incep
     volumes:
     - data:/var/www/html
-
+    - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
 volumes:
     data:
 
