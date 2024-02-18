@@ -2,25 +2,46 @@ version: "3"
 services:
   nginx:
     build: ./requirements/nginx
+    restart: always
     ports:
      - "8080:80"
-    tty: true
     networks:
      - incep
     volumes:
      - data:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
+    depends_on:
+     - wordpress
 
   wordpress:
     build: ./requirements/wordpress/
-    tty: true
+    restart: always
     networks:
      - incep
     volumes:
     - data:/var/www/html
     - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: user
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress_db
+
+  mariadb:
+    build: ./requirements/mariadb/
+    restart: always
+    networks:
+     - incep
+    environment:
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
 volumes:
     data:
+    mariadb_data:
 
 networks:
    incep:
