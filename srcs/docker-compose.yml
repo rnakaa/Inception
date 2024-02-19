@@ -6,36 +6,34 @@ services:
     ports:
      - "8080:80"
     networks:
-     - incep
+     - webservenet
     volumes:
      - data:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
      - wordpress
 
+
   wordpress:
     build: ./requirements/wordpress/
     restart: always
     networks:
-     - incep
+     - dbnet
+     - webservenet
     volumes:
     - data:/var/www/html
     - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
-    environment:
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: user
-      WORDPRESS_DB_PASSWORD: password
-      WORDPRESS_DB_NAME: wordpress_db
+    env_file:
+    - ./requirements/wordpress/wordpress-variables.env
+
 
   mariadb:
     build: ./requirements/mariadb/
     restart: always
     networks:
-     - incep
-    environment:
-      MYSQL_DATABASE: wordpress_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+     - dbnet
+    env_file:
+    - ./requirements/mariadb/mariadb-variables.env
     volumes:
       - mariadb_data:/var/lib/mysql
 
@@ -44,4 +42,5 @@ volumes:
     mariadb_data:
 
 networks:
-   incep:
+   webservenet:
+   dbnet:
