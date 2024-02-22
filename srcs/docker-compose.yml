@@ -4,7 +4,8 @@ services:
     build: ./requirements/nginx
     restart: always
     ports:
-     - "8080:80"
+     - "80:80"
+     - "443:443"
     networks:
      - webservenet
     volumes:
@@ -21,10 +22,12 @@ services:
      - dbnet
      - webservenet
     volumes:
-    - data:/var/www/html
-    - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+     - data:/var/www/html
+     - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
-    - ./requirements/wordpress/wordpress-variables.env
+     - ./.env
+    depends_on:
+     - mariadb
 
 
   mariadb:
@@ -33,9 +36,9 @@ services:
     networks:
      - dbnet
     env_file:
-    - ./requirements/mariadb/mariadb-variables.env
+     - ./.env
     volumes:
-      - mariadb_data:/var/lib/mysql
+     - mariadb_data:/var/lib/mysql
 
 volumes:
     data:
