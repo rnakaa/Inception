@@ -10,7 +10,7 @@ services:
     networks:
      - webservenet
     volumes:
-     - data:/var/www/html
+     - /home/rnaka/data/wordpress:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
      - wordpress
@@ -24,7 +24,7 @@ services:
      - dbnet
      - webservenet
     volumes:
-     - data:/var/www/html
+     - /home/rnaka/data/wordpress:/var/www/html
      - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
      - ./.env
@@ -42,17 +42,17 @@ services:
     env_file:
      - ./.env
     volumes:
-     - mariadb_data:/var/lib/mysql
+       - type: bind
+         source: /home/rnaka/data/mysql
+         target: /var/lib/mysql
+    tty: true
     healthcheck:
       test: ["CMD-SHELL", "mysql --user=user --password=password -e 'SELECT 1'"]
-      interval: 3s
+      # test: ["CMD-SHELL", "echo a"]
+      interval: 10s
       timeout: 10s
-      retries: 3
-      start_period: 3s
-
-volumes:
-    data:
-    mariadb_data:
+      retries: 1
+      start_period: 30s
 
 networks:
    webservenet:
