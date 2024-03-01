@@ -46,10 +46,10 @@ services:
     volumes:
       - db:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysql --user=user --password=password -e 'SELECT 1'"]
+      test: ["CMD-SHELL", "mysql -uuser -ppassword -e 'SELECT 1'"]
       # test: ["CMD-SHELL", "echo a"]
       interval: 10s
-      timeout: 15s
+      timeout: 10s
       retries: 1
       start_period: 3s
 
@@ -60,7 +60,7 @@ volumes:
       driver_opts:
         o: bind
         type: none
-        device: /Users/rnaka/data/mysql
+        device: /home/rnaka/data/mysql
 
 networks:
    webservenet:
