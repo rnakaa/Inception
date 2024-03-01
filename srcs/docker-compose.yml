@@ -50,7 +50,7 @@ services:
       # test: ["CMD-SHELL", "echo a"]
       interval: 10s
       timeout: 10s
-      retries: 1
+      retries: 3
       start_period: 3s
 
 volumes:
