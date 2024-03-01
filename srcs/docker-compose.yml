@@ -10,7 +10,8 @@ services:
     networks:
      - webservenet
     volumes:
-     - /home/rnaka/data/wordpress:/var/www/html
+    #  - /home/rnaka/data/wordpress:/var/www/html
+     - /Users/rnaka/data/wordpress:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
      - wordpress
@@ -24,7 +25,8 @@ services:
      - dbnet
      - webservenet
     volumes:
-     - /home/rnaka/data/wordpress:/var/www/html
+    #  - /home/rnaka/data/wordpress:/var/www/html
+     - /Users/rnaka/data/wordpress:/var/www/html
      - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
      - ./.env
@@ -42,17 +44,23 @@ services:
     env_file:
      - ./.env
     volumes:
-       - type: bind
-         source: /home/rnaka/data/mysql
-         target: /var/lib/mysql
-    tty: true
+      - db:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysql --user=user --password=password -e 'SELECT 1'"]
       # test: ["CMD-SHELL", "echo a"]
       interval: 10s
-      timeout: 10s
+      timeout: 15s
       retries: 1
-      start_period: 30s
+      start_period: 3s
+
+volumes:
+    db:
+      name: db
+      driver: local
+      driver_opts:
+        o: bind
+        type: none
+        device: /Users/rnaka/data/mysql
 
 networks:
    webservenet:
