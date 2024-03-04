@@ -13,7 +13,8 @@ services:
      - wordpress:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
-     - wordpress
+      wordpress:
+        condition: service_healthy
 
 
   wordpress:
@@ -28,6 +29,12 @@ services:
      - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
      - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "wp core is-installed --allow-root --path=/var/www/html"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     depends_on:
       mariadb:
         condition: service_healthy
