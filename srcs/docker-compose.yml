@@ -5,13 +5,12 @@ services:
     build: ./requirements/nginx
     restart: always
     ports:
-     - "80:80"
+    #  - "80:80"
      - "443:443"
     networks:
      - webservenet
     volumes:
-    #  - /home/rnaka/data/wordpress:/var/www/html
-     - /Users/rnaka/data/wordpress:/var/www/html
+     - wordpress:/var/www/html
      - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
      - wordpress
@@ -25,8 +24,7 @@ services:
      - dbnet
      - webservenet
     volumes:
-    #  - /home/rnaka/data/wordpress:/var/www/html
-     - /Users/rnaka/data/wordpress:/var/www/html
+     - wordpress:/var/www/html
      - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
      - ./.env
@@ -47,11 +45,10 @@ services:
       - db:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysql -uuser -ppassword -e 'SELECT 1'"]
-      # test: ["CMD-SHELL", "echo a"]
-      interval: 3s
+      interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 20s
+      start_period: 60s
 
 volumes:
     db:
@@ -60,8 +57,14 @@ volumes:
       driver_opts:
         o: bind
         type: none
-        device: /Users/rnaka/data/mysql
-        # device: /home/rnaka/data/mysql
+        device: /home/rnaka/data/mysql
+    wordpress:
+      name: wordpress
+      driver: local
+      driver_opts:
+        o: bind
+        type: none
+        device: /home/rnaka/data/wordpress
 
 networks:
    webservenet:

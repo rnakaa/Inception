@@ -7,10 +7,15 @@ build:
 stop:
 	docker compose -f srcs/docker-compose.yml stop
 
+start:
+	docker compose -f srcs/docker-compose.yml start
+
 clean:
+	docker compose -f srcs/docker-compose.yml down --rmi all -v 
+
+fclean:
 	docker compose -f srcs/docker-compose.yml down --rmi all -v \
-	&& sudo rm -rf /Users/rnaka/data/mysql/* /Users/rnaka/data/wordpress/*
-	# && sudo rm -rf /home/rnaka/data/mysql/* /home/rnaka/data/wordpress/*
+	&& sudo rm -rf /home/rnaka/data/mysql/* /home/rnaka/data/wordpress/*
 
 exe-nginx:
 	docker compose -f srcs/docker-compose.yml exec nginx bash
